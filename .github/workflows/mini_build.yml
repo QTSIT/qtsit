@@ -101,9 +101,9 @@ jobs:
         pip install conda-merge;
         cd requirements
         if [ "$(uname)" == 'Linux' ]; then
-          conda-merge env_base.yml env_test.yml env_ubuntu.yml > env.yml
+          conda-merge env_base.yml env_test.yml > env.yml
         elif [  "$(uname)" == 'Darwin' ]; then
-          conda-merge env_base.yml env_test.yml env_mac.yml yml > env.yml
+          conda-merge env_base.yml env_test.yml > env.yml
         elif [[  "$(uname)" == "MINGW64_NT"* ]]; then
           conda-merge env_base.yml env_test.yml > env.yml
         fi;
