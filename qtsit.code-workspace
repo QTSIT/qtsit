@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../qtsit"
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "ms-python.pylint",
+		"pylint.importStrategy": "useBundled",
+		"autoDocstring.docstringFormat": "numpy",
+		"pythonIndent.trimLinesWithOnlyWhitespace": true,
+		"python.languageServer": "Pylance",
+		"python.autoComplete.extraPaths": [],
+		"python.formatting.provider": "yapf",
+		"python.analysis.extraPaths": []
+	}
+}
