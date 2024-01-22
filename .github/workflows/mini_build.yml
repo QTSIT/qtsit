@@ -15,7 +15,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ['3.9', '3.10', '3.11']
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       # using cached dependencies to speed up workflow
       # ref: https://docs.github.com/en/actions/advanced-guides/caching-dependencies-to-speed-up-workflows
     - name: Cache pip modules for Linux
@@ -49,7 +49,7 @@ jobs:
       OS: ${{ matrix.os }}
       PYTHON_VERSION: ${{ matrix.python-version }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Set commit range (push to the main branch, e.g. merge)
@@ -115,7 +115,7 @@ jobs:
     needs: [core-build]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python
       uses: actions/setup-python@v3
       with:

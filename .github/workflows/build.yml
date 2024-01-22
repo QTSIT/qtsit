@@ -69,7 +69,7 @@ jobs:
       matrix:
         python-version: ['3.9']
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Cache pip packages for Windows
       uses: actions/cache@v3
       with:
