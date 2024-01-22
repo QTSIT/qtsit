@@ -78,4 +78,4 @@ If you are using the Windows and the PowerShell:
 
 .. qtsit has soft requirements, which can be installed on the fly during development inside the environment 
 .. but if you want to install all the soft-dependencies at once, then take a look at 
-.. `qtsit/requirements <https://github.com/qtsit/qtsit/tree/master/requirements>`_
+.. `qtsit/requirements <https://github.com/qtsit/qtsit/tree/main/requirements>`_

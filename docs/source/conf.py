@@ -126,5 +126,5 @@ def linkcode_resolve(domain, info):
     except Exception:
         filename = info['module'].replace('.', '/') + '.py'
 
-    tag = 'master' if 'dev' in release else release
+    tag = 'main' if 'dev' in release else release
     return "https://github.com/qtsit/qtsit/blob/%s/%s" % (tag, filename)

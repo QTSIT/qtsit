@@ -1,15 +1,15 @@
 name: Test for build scripts
 on:
-  push: # ci work when pushing master branch
+  push: # ci work when pushing main branch
     branches:
-      - master
+      - main
     paths:
       - "scripts/install_qtsit_conda.ps1"
       - "scripts/install_qtsit_conda.sh"
       - "requirements/**"
-  pull_request: # ci work when creating a PR to master branch
+  pull_request: # ci work when creating a PR to main branch
     branches:
-      - master
+      - main
     paths:
       - "scripts/install_qtsit_conda.ps1"
       - "scripts/install_qtsit_conda.sh"

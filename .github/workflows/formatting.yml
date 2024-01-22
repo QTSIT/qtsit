@@ -1,12 +1,12 @@
 name: Code Formatting
 
 on:
-  push: # ci work when pushing master branch
+  push: # ci work when pushing main branch
     branches:
-      - master
-  pull_request: # ci work when creating a PR to master branch
+      - main
+  pull_request: # ci work when creating a PR to main branch
     branches:
-      - master
+      - main
 
 
 jobs:
@@ -17,15 +17,15 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Set commit range (push to the master branch, e.g. merge)
-      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    - name: Set commit range (push to the main branch, e.g. merge)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: echo "COMMIT_RANGE=${{ github.event.before }}.." >> $GITHUB_ENV
 
     - name: Set commit range (pull request)
       if: github.event_name == 'pull_request'
       run: |
-        git fetch origin master
-        echo "COMMIT_RANGE=origin/master..." >> $GITHUB_ENV
+        git fetch origin main
+        echo "COMMIT_RANGE=origin/main..." >> $GITHUB_ENV
 
     - name: Cache pip packages for Linux
       if: runner.os == 'Linux'

@@ -46,7 +46,7 @@ cd QTSIT
 &nbsp;&nbsp;&nbsp;&nbsp; 1.1. If you already have QTSIT from source, update it by running
 ```bash
 git fetch upstream
-git rebase upstream/master
+git rebase upstream/main
 ```
 
 2. Set up a new conda environment for QTSIT
