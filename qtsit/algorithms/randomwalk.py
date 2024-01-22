@@ -2,6 +2,7 @@
 Code for random walk algorithms.
 """
 
+
 def algorithm1(args: int) -> int:
     """Summary
 
