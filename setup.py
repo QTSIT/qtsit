@@ -62,6 +62,6 @@ setup(name='qtsit',
       },
       install_requires=[
           'joblib',
-          'numpy>=1.21',
+          'numpy',
       ],
       python_requires='>=3.9,<3.12')
