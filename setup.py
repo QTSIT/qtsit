@@ -1,46 +1,67 @@
-"""Python setup.py for qtsit package"""
-import io
-import os
-from setuptools import find_packages, setup
+"""Python Setup.py file for qtist package."""
+import sys
+import time
+from setuptools import setup, find_packages
+
+if '--release' in sys.argv:
+    IS_RELEASE = True
+    sys.argv.remove('--release')
+else:
+    # Build a nightly package by default.
+    IS_RELEASE = False
 
 
-def read(*paths, **kwargs):
-    """Read the contents of a text file safely.
-    >>> read("qtsit", "VERSION")
-    '0.1.0'
-    >>> read("README.md")
-    ...
-    """
+# get the version from qtsit/__init__.py
+def _get_version():
+    with open('qtsit/__init__.py') as fp:
+        for line in fp:
+            if line.startswith('__version__'):
+                g = {}
+                exec(line, g)
+                base = g['__version__']
+                if IS_RELEASE:
+                    return base
+                else:
+                    # nightly version : .devYearMonthDayHourMinute
+                    if base.endswith('.dev') is False:
+                        # Force to add `.dev` if `--release` option isn't passed when building
+                        base += '.dev'
+                    return base + time.strftime("%Y%m%d%H%M%S")
 
-    content = ""
-    with io.open(
-        os.path.join(os.path.dirname(__file__), *paths),
-        encoding=kwargs.get("encoding", "utf8"),
-    ) as open_file:
-        content = open_file.read().strip()
-    return content
-
-
-def read_requirements(path):
-    return [
-        line.strip()
-        for line in read(path).split("\n")
-        if not line.startswith(('"', "#", "-", "git+"))
-    ]
+        raise ValueError('`__version__` not defined in `qtsit/__init__.py`')
 
 
-setup(
-    name="qtsit",
-    version=read("qtsit", "VERSION"),
-    description="Awesome qtsit created by QTSIT",
-    url="https://github.com/QTSIT/qtsit/",
-    long_description=read("README.md"),
-    long_description_content_type="text/markdown",
-    author="QTSIT",
-    packages=find_packages(exclude=["tests", ".github"]),
-    install_requires=read_requirements("requirements.txt"),
-    entry_points={
-        "console_scripts": ["qtsit = qtsit.__main__:main"]
-    },
-    extras_require={"test": read_requirements("requirements-test.txt")},
-)
+setup(name='qtsit',
+      version=_get_version(),
+      url='https://github.com/qtsit/qtsit',
+      maintainer='QTSIT contributors',
+      classifiers=[
+          'Development Status :: 4 - Beta',
+          'Environment :: Console',
+          'Intended Audience :: Developers',
+          'Intended Audience :: Information Technology',
+          'License :: OSI Approved :: MIT License',
+          'Operating System :: OS Independent',
+          'Programming Language :: Python :: 3.9',
+          'Programming Language :: Python :: 3.10',
+          'Programming Language :: Python :: 3.11',
+      ],
+      license='MIT',
+      description='QTSIT: Quantum Technologies for Industry Transformation Toolkit',
+      keywords=[
+          'qtsit',
+          'quantum-chemistry',
+		  'quantum-computing',
+		  'quantum-ml',
+		  'quantum-ai',
+      ],
+      packages=find_packages(exclude=["*.tests"]),
+      project_urls={
+          'Documentation': 'https://qtsit.readthedocs.io/en/latest/',
+          'Source': 'https://github.com/QTSIT/qtsit',
+      },
+      install_requires=[
+          'joblib',
+          'numpy>=1.21',
+      ],
+      python_requires='>=3.9,<3.12')

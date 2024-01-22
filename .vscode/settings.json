@@ -1,0 +1,37 @@
+{
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "files.trimTrailingWhitespace": true,
+    "files.autoSave": "onFocusChange",
+    "git.autofetch": true,
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.pylint"
+    },
+    "python.defaultInterpreterPath": "/usr/local/bin/python",
+    "python.formatting.provider": "yapf",
+    "autoDocstring.docstringFormat": "numpy",
+    "pythonIndent.trimLinesWithOnlyWhitespace": true,
+    "python.languageServer": "Pylance",
+    "python.autoComplete.extraPaths": [],
+    "python.linting.enabled": true,
+    "python.linting.pylintPath": "pylint",
+    "python.linting.pylintEnabled": true,
+    "python.analysis.extraPaths": [],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "pylint.args": [
+        "--rcfile=pyproject.toml"
+    ],
+    "black-formatter.args": [
+        "--config=pyproject.toml"
+    ],
+    "flake8.args": [
+        "--toml-config=pyproject.toml"
+    ],
+    "isort.args": [
+        "--settings-path=pyproject.toml"
+    ]
+}

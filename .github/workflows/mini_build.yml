@@ -1,0 +1,139 @@
+name: Test for Build
+on:
+  push: # ci work when pushing master branch
+    branches:
+      - master
+  pull_request: # ci work when creating a PR to master branch
+    branches:
+      - master
+jobs:
+  core-build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.9', '3.10', '3.11']
+        include:
+        - os: windows-latest
+          python-version: ['3.9', '3.10', '3.11']
+    steps:
+    - uses: actions/checkout@v3
+      # using cached dependencies to speed up workflow
+      # ref: https://docs.github.com/en/actions/advanced-guides/caching-dependencies-to-speed-up-workflows
+    - name: Cache pip modules for Linux
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        # the key is used to search for cache
+        # hashFile(paths) return a single hash for the set of files that matches the path pattern
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements/**') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Build qtsit
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+    - name: Import checking
+      run: python -c "import qtsit"
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.9', '3.10', '3.11']
+        include:
+          - os: windows-latest
+            python-version: ['3.9', '3.10', '3.11']
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON_VERSION: ${{ matrix.python-version }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Set commit range (push to the master branch, e.g. merge)
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      run: echo "COMMIT_RANGE=${{ github.event.before }}.." >> $GITHUB_ENV
+    - name: Set commit range (pull request)
+      if: github.event_name == 'pull_request'
+      run: |
+        git fetch origin master
+        echo "COMMIT_RANGE=origin/master..." >> $GITHUB_ENV
+    - name: Cache pip packages for Linux
+      if: runner.os == 'Linux'
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements/**') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache pip packages for MacOS
+      if: runner.os == 'macOS'
+      uses: actions/cache@v3
+      with:
+        path: ~/Library/Caches/pip
+        key: ${{ matrix.os }}-pip-${{ hashFiles('requirements/**') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache pip packages for Windows
+      if: runner.os == 'Windows'
+      uses: actions/cache@v3
+      with:
+        path: ~\AppData\Local\pip\Cache
+        key: ${{ matrix.os }}-pip-${{ hashFiles('requirements/**') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Create env.yml for python 
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip;
+        pip install conda-merge;
+        cd requirements
+        if [ "$(uname)" == 'Linux' ]; then
+          conda-merge env_base.yml env_test.yml env_ubuntu.yml > env.yml
+        elif [  "$(uname)" == 'Darwin' ]; then
+          conda-merge env_base.yml env_test.yml env_mac.yml yml > env.yml
+        elif [[  "$(uname)" == "MINGW64_NT"* ]]; then
+          conda-merge env_base.yml env_test.yml > env.yml
+        fi;
+        cd ..
+        cp requirements/env.yml env.yml
+    - name: Install all dependencies using micromamba
+      uses: mamba-org/setup-micromamba@main
+      with:
+        environment-file: env.yml
+        environment-name: qtsit
+        create-args: python=${{ matrix.python-version }}
+
+  pypi-build:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: [core-build]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.9'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine
+    - name: Publish (Nightly)
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+      run: |
+        python setup.py sdist bdist_wheel
+        twine upload dist/*
