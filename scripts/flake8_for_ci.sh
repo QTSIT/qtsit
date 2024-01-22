@@ -2,7 +2,7 @@
 # usage: source scripts/flake8_for_ci.sh
 
 items=(
-    "qtist/algorithms"
+    "qtsit/algorithms"
 )
 
 for item in "${items[@]}" ; do
