@@ -34,7 +34,7 @@ jobs:
           ${{ runner.os }}-pip-
     - name: Cache pip modules for MacOS
       if: runner.os == 'macOS'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/Library/Caches/pip
         key: ${{ matrix.os }}-pip-${{ hashFiles('requirements/**') }}
@@ -71,7 +71,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Cache pip packages for Windows
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~\AppData\Local\pip\Cache
         key: ${{ matrix.os }}-pip-${{ hashFiles('env.*.yml') }}
