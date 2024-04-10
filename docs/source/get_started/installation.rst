@@ -1,6 +1,8 @@
 Installation
 ============
 
+This page is a guide on how to install qisit
+
 Stable version
 --------------
 
